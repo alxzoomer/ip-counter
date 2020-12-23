@@ -20,10 +20,19 @@ tasks.test {
     useJUnit()
 }
 
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+    configurations["compileClasspath"].forEach { file: File ->
+        from(zipTree(file.absoluteFile))
+    }
+}
+
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "11"
 }
 
 application {
-    mainClassName = "MainKt"
+    mainClass.set("MainKt")
 }
