@@ -51,12 +51,11 @@ class IpV4Test {
 
     @ParameterizedTest
     @CsvSource(
-        value = [
-            "''",
-            "256.0.0.0",
-            "0.256.0.0",
-            "0.0.256.0",
-            "0.0.0.256"]
+        "''",
+        "256.0.0.0",
+        "0.256.0.0",
+        "0.0.256.0",
+        "0.0.0.256"
     )
     fun verifyInvalidIpFromStringThrowsException(ipAddress: String) {
         assertThrows<IllegalArgumentException> {
