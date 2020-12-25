@@ -38,6 +38,17 @@ class IpV4Test {
 
     @ParameterizedTest
     @CsvSource(
+        "0.0.0.0, 0",
+        "127.127.127.127, 2139062143",
+        "255.255.255.255, 4294967295"
+    )
+    fun verifyToUInt(ipAddress: String, ipAddressUInt: Long) {
+        val ip = IpV4.fromString(ipAddress)
+        assertEquals(ipAddressUInt.toUInt(), ip.toUInt())
+    }
+
+    @ParameterizedTest
+    @CsvSource(
         "-1,0,0,0",
         "0,-1,0,0",
         "0,0,-1,0",

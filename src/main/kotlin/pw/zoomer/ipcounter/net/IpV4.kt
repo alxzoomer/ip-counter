@@ -7,6 +7,10 @@ data class IpV4(val octet1: Int, val octet2: Int, val octet3: Int, val octet4: I
         }
     }
 
+    fun toUInt() : UInt {
+        return (octet1.toUInt() shl 24) + (octet2.toUInt() shl 16) + (octet3.toUInt() shl 8) + octet4.toUInt()
+    }
+
     companion object {
         fun fromString(ipAddress: String): IpV4 {
             val octets = ipAddress.split('.').map { parseOctet(it) }
