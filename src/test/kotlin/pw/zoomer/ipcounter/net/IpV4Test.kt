@@ -42,9 +42,9 @@ class IpV4Test {
         "127.127.127.127, 2139062143",
         "255.255.255.255, 4294967295"
     )
-    fun verifyToUInt(ipAddress: String, ipAddressUInt: Long) {
+    fun verifyToUInt(ipAddress: String, ipAddressLong: Long) {
         val ip = IpV4.fromString(ipAddress)
-        assertEquals(ipAddressUInt.toUInt(), ip.toUInt())
+        assertEquals(ipAddressLong, ip.toLong())
     }
 
     @ParameterizedTest

@@ -7,8 +7,8 @@ data class IpV4(val octet1: Int, val octet2: Int, val octet3: Int, val octet4: I
         }
     }
 
-    fun toUInt() : UInt {
-        return (octet1.toUInt() shl 24) + (octet2.toUInt() shl 16) + (octet3.toUInt() shl 8) + octet4.toUInt()
+    fun toLong() : Long {
+        return (octet1.toLong() shl 24) + (octet2 shl 16) + (octet3 shl 8) + octet4
     }
 
     companion object {
