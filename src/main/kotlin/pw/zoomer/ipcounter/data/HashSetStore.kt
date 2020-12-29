@@ -1,7 +1,9 @@
 package pw.zoomer.ipcounter.data
 
-import pw.zoomer.ipcounter.net.IpV4
-
+/**
+ * Store IP addresses inside two hash sets.
+ * For 100M IP addresses required about 7Gb of heap space.
+ */
 class HashSetStore : IpStore {
     private val highIPs = HashSet<Long>()
     private val lowIPs = HashSet<Long>()
@@ -9,11 +11,11 @@ class HashSetStore : IpStore {
     override val count: Long
         get() = highIPs.size.toLong() + lowIPs.size
 
-    override fun add(ipAddress: IpV4) {
-        if (ipAddress.octet1 and 0b1000_0000 == 0) {
-            lowIPs.add(ipAddress.toLong())
+    override fun add(ipAddress: Long) {
+        if (ipAddress < 0) {
+            lowIPs.add(ipAddress)
         } else {
-            highIPs.add(ipAddress.toLong())
+            highIPs.add(ipAddress)
         }
     }
 }
