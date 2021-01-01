@@ -1,3 +1,5 @@
+import pw.zoomer.ipcounter.Application
+
 fun main(args: Array<String>) {
-    println("Hello World!")
+    Application(args).start()
 }
