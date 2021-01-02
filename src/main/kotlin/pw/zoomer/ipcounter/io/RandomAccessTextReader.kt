@@ -14,8 +14,47 @@ class RandomAccessTextReader(
     private val filePath: String,
     private val startPosition: Long,
     private val endPosition: Long,
-    private val skipIncompleteLine: Boolean = false
+    private val skipIncompleteLine: Boolean = false,
+    private val useRoughPositionTracker: Boolean = true
 ) : TextReader {
+
+    private interface FilePositionTracker {
+        fun canRead(line: String?): Boolean
+    }
+
+    private class SimplePositionTracker(private val file: RandomAccessFile, private val endPosition: Long) :
+        FilePositionTracker {
+        override fun canRead(line: String?) = line?.let { file.filePointer <= endPosition } ?: false
+    }
+
+    private class PositionTracker(private val file: RandomAccessFile, private val endPosition: Long) :
+        FilePositionTracker {
+        // Rough position calculated as line length of single chars + \n
+        private var roughPosition = 0L
+
+        // Adjustment position used to minimize position error
+        private var adjustmentPosition = 0L
+
+        init {
+            adjustRoughPosition()
+        }
+
+        private fun adjustRoughPosition() {
+            roughPosition = file.filePointer
+            adjustmentPosition = roughPosition + DEFAULT_BUFFER_SIZE
+        }
+
+        override fun canRead(line: String?): Boolean {
+            return line?.let {
+                roughPosition += it.length + 1
+                if (roughPosition > adjustmentPosition) {
+                    adjustRoughPosition()
+                }
+                // filePointer is expensive for CPU
+                !(roughPosition > endPosition && file.filePointer > endPosition)
+            } ?: false
+        }
+    }
 
     override fun forEachLine(action: (line: String) -> Unit) {
         RandomAccessFile(filePath, "r").use { file ->
@@ -23,11 +62,13 @@ class RandomAccessTextReader(
             file.seek(startPosition)
             // Skip the first line when start position is not equal to 0 because it can be incomplete.
             if (skipIncompleteLine && startPosition > 0 && reader.readLine() == null) return
-            do {
-                val line = reader.readLine()?.also(action)
-                // File pointer is multiple of default buffer reader size i.e. to 8192 bytes and
-                // not points to actual position after line length.
-            } while (line != null && file.filePointer <= endPosition)
+
+            val tracker = if (useRoughPositionTracker) {
+                PositionTracker(file, endPosition)
+            } else {
+                SimplePositionTracker(file, endPosition)
+            }
+            while (tracker.canRead(reader.readLine()?.also(action)));
         }
     }
 
