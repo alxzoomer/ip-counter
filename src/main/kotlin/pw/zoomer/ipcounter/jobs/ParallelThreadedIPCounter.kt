@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
  * queue.
  * Queue reads from separate thread and each IP writes to the IP store.
  * @param readerInitBlock TextReader init block.
- * @param ipStoreInitBlock IpStore init block to prepare destination IP store.
+ * @param store destination IP store.
  * @param logger ILogger logger instance to write parsing errors.
  */
 class ParallelThreadedIPCounter(
