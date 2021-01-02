@@ -60,7 +60,7 @@ cd ip-counter
 gradlew.bat build
 ```
 
-Запуск тестов
+Запуск тестов:
 
 ```shell
 # Linux/MacOS
