@@ -18,10 +18,9 @@ import kotlin.concurrent.thread
  */
 class ParallelThreadedIPCounter(
     private val readerInitBlock: (jobNumber: Int, jobsCount: Int) -> TextReader,
-    ipStoreInitBlock: () -> IpStore,
+    private val store: IpStore,
     private val logger: ILogger
 ) {
-    private val store = ipStoreInitBlock()
     private val queue = ConcurrentLinkedQueue<Long>()
     private val stopQueueJob = AtomicBoolean(false)
 
