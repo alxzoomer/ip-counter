@@ -39,7 +39,7 @@ class Application(private val args: Array<String>) {
         val ipStore = IpAsBitsArrayStore()
         val counter = ParallelThreadedIPCounter(
             { jobNumber, jobsCount -> getTextReader(file, jobNumber, jobsCount) },
-            { ipStore },
+            ipStore,
             logger
         )
         val jobsCount = calcJobsCount(file)
