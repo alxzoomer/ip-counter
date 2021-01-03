@@ -56,7 +56,7 @@ class ParallelThreadedIPCounter(
                 logger.error("Incorrect IP address $line")
             }
             i++
-            if (i % 10_000_00 == 0L) {
+            if (i % 10_000_000 == 0L) {
                 logger.info("${Thread.currentThread().name}: processed $i")
             }
         }
