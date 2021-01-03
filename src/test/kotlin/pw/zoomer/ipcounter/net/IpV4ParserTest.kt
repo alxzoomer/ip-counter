@@ -13,7 +13,7 @@ class IpV4ParserTest {
         "255.255.255.255, 4294967295",
         "255.128.16.1, 4286582785"
     )
-    fun verifyToUInt(ipAddress: String, ipAddressLong: Long) {
+    fun verifyToLong(ipAddress: String, ipAddressLong: Long) {
         val ip = IpV4Parser.toLongOrNull(ipAddress)
         assertEquals(ipAddressLong, ip)
     }

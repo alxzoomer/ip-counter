@@ -1,13 +1,27 @@
 package pw.zoomer.ipcounter.net
 
+import java.net.Inet4Address
+import java.nio.ByteBuffer
+
+/**
+ * IP V4 Parser based on java.net.Inet4Address.
+ * @see java.net.Inet4Address
+ */
 sealed class IpV4Parser {
     companion object {
-        fun toLongOrNull(ip: String): Long? {
-            val octets = ip.trim().split('.').map { it.toLongOrNull() ?: -1 }
-            if (octets.size != 4 || octets.any { it !in 0..255L }) {
-                return null
+        /**
+         * Parses IP address or host name to Long IP number or return null if address is not parsable or hostname
+         * cannot be resolved.
+         * @see Inet4Address.getByName
+         */
+        fun toLongOrNull(ip: String): Long? =
+            try {
+                Inet4Address.getByName(ip).let {
+                    val signedIp = ByteBuffer.wrap(it.address).int.toLong()
+                    if (signedIp >= 0) signedIp else ((signedIp and 0xFF_FF_FF_FF) or (1L shl 31))
+                }
+            } catch (ex: java.net.UnknownHostException) {
+                null
             }
-            return (octets[0] shl 24) + (octets[1] shl 16) + (octets[2] shl 8) + octets[3]
-        }
     }
 }
