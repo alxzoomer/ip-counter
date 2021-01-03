@@ -8,6 +8,7 @@ import kotlin.test.assertNull
 class IpV4ParserTest {
     @ParameterizedTest
     @CsvSource(
+        "0, 0",
         "0.0.0.0, 0",
         "127.127.127.127, 2139062143",
         "255.255.255.255, 4294967295",

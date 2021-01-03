@@ -14,8 +14,11 @@ sealed class IpV4Parser {
          * cannot be resolved.
          * @see Inet4Address.getByName
          */
-        fun toLongOrNull(ip: String): Long? =
-            try {
+        fun toLongOrNull(ip: String): Long? {
+            if (ip.isEmpty()) {
+                return null
+            }
+            return try {
                 Inet4Address.getByName(ip).let {
                     val signedIp = ByteBuffer.wrap(it.address).int.toLong()
                     if (signedIp >= 0) signedIp else ((signedIp and 0xFF_FF_FF_FF) or (1L shl 31))
@@ -23,5 +26,6 @@ sealed class IpV4Parser {
             } catch (ex: java.net.UnknownHostException) {
                 null
             }
+        }
     }
 }
