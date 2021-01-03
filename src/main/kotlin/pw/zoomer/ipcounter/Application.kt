@@ -8,9 +8,6 @@ import pw.zoomer.ipcounter.log.ConsoleLogger
 import pw.zoomer.ipcounter.log.ILogger
 import pw.zoomer.ipcounter.performance.Stats
 import java.io.File
-import kotlin.math.ceil
-import kotlin.math.min
-import kotlin.math.max
 
 /**
  * Application is bootstrap class.
@@ -18,6 +15,12 @@ import kotlin.math.max
 class Application(private val args: Array<String>) {
     private val logger: ILogger = ConsoleLogger()
     private val stats = Stats(logger)
+
+    /**
+     * Count of text reader parallel jobs.
+     * Effective value is count of CPU cores. Hyper-threading cores should not be counted.
+     */
+    private val readerJobs = 1
 
     /**
      * Parse arguments and start application if arguments is correct or show help if incorrect.
@@ -38,19 +41,20 @@ class Application(private val args: Array<String>) {
         logger.info("Start IP counting")
         val ipStore = IpAsBitsArrayStore()
         val counter = ParallelThreadedIPCounter(
-            { jobNumber, jobsCount -> getTextReader(file, jobNumber, jobsCount) },
+            { jobNumber, jobsCount -> buildTextReader(file, jobNumber, jobsCount) },
             ipStore,
             logger
         )
-        val jobsCount = calcJobsCount(file)
-        counter.start(jobsCount)
+        counter.start(readerJobs)
+//        val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
+//        counter.start()
         logger.info("Unique IP count: ${counter.count}")
     }
 
     /**
      * Creates text reader for specific file and calculate file start and end position to read.
      */
-    private fun getTextReader(file: File, jobNumber: Int, jobsCount: Int): TextReader {
+    private fun buildTextReader(file: File, jobNumber: Int, jobsCount: Int): TextReader {
         val chunkSize = file.length() / jobsCount
         val chunkStartPosition = chunkSize * jobNumber
         val chunkEndPosition = if (jobNumber < jobsCount - 1) {
@@ -65,16 +69,4 @@ class Application(private val args: Array<String>) {
             skipIncompleteLine = true
         )
     }
-
-    /**
-     * Calculates jobs count. When file size enough small and less then buffered reader buffer size then it
-     * will be 1 job otherwise job count will be not more than CPU cores count and not more than file size
-     * divided to default buffer size.
-     */
-    private fun calcJobsCount(file: File) = max(
-        min(
-            ceil(file.length() * 1f / RandomAccessTextReader.DEFAULT_BUFFER_SIZE).toInt(),
-            Runtime.getRuntime().availableProcessors()
-        ), 1
-    )
 }

@@ -3,7 +3,7 @@ package pw.zoomer.ipcounter.jobs
 import pw.zoomer.ipcounter.data.IpStore
 import pw.zoomer.ipcounter.io.TextReader
 import pw.zoomer.ipcounter.log.ILogger
-import pw.zoomer.ipcounter.net.IpV4Parser
+import pw.zoomer.ipcounter.net.QuickIpV4Parser
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
@@ -52,7 +52,7 @@ class ParallelThreadedIPCounter(
         logger.info("${Thread.currentThread().name} started")
         var i = 0L
         reader.forEachLine { line ->
-            if (IpV4Parser.toLongOrNull(line)?.also { ip -> queue.add(ip) } == null) {
+            if (QuickIpV4Parser.toLongOrNull(line)?.also { ip -> queue.add(ip) } == null) {
                 logger.error("Incorrect IP address $line")
             }
             i++
