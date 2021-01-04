@@ -3,7 +3,7 @@ package pw.zoomer.ipcounter.jobs
 import pw.zoomer.ipcounter.data.IpStore
 import pw.zoomer.ipcounter.io.TextReader
 import pw.zoomer.ipcounter.log.ILogger
-import pw.zoomer.ipcounter.net.IpV4Parser
+import pw.zoomer.ipcounter.net.QuickIpV4Parser
 
 /**
  * Class reads IP addresses from text reader source line by line and writes parsed IP's to IP store.
@@ -27,7 +27,7 @@ class SingleThreadedIpCounter(
      */
     fun start() {
         reader.forEachLine {
-            if (IpV4Parser.toLongOrNull(it)?.let { ip -> ipStore.add(ip) } == null) {
+            if (QuickIpV4Parser.toLongOrNull(it)?.let { ip -> ipStore.add(ip) } == null) {
                 logger.error("Incorrect IP address $it")
             }
         }
