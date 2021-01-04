@@ -1,7 +1,7 @@
 package pw.zoomer.ipcounter.net
 
 /**
- * Quick IP V4 parser.
+ * Quick IP V4 parser works only with IP V4 in format x.x.x.x and faster than IpV4Parser in 10+ times.
  */
 sealed class QuickIpV4Parser {
     private enum class ParsingState {
