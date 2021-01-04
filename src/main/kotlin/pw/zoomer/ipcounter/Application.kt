@@ -13,7 +13,7 @@ import java.io.File
  * Application is bootstrap class.
  */
 class Application(private val args: Array<String>) {
-    private val logger: Logger = ConsoleLogger()
+    private val logger = ConsoleLogger()
     private val stats = Stats(logger)
 
     /**
