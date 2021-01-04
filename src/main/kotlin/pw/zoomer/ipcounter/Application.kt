@@ -19,8 +19,18 @@ class Application(private val args: Array<String>) {
      * Parse arguments and start application if arguments is correct or show help if incorrect.
      */
     fun start() {
-        if (args.size == 1 && File(args[0]).isFile) {
-            stats.measureTimeMillis { stats.memStats { countIps(File(args[0])) } }
+        if (args.size == 1) {
+            val file = File(args[0])
+            if (file.isFile) {
+                try {
+                    stats.measureTimeMillis { stats.memStats { countIps(file.absolutePath) } }
+                } catch (ex: Exception) {
+                    logger.error("Application stopped with error: ${ex.message}")
+                }
+            } else {
+                println("Path ${args[0]} is not regular file.")
+                help()
+            }
         } else {
             help()
         }
@@ -30,14 +40,14 @@ class Application(private val args: Array<String>) {
         println("Run application: java -jar ip-counter.jar <IP list file path>")
     }
 
-    private fun countIps(file: File) {
+    private fun countIps(filePath: String) {
         logger.info("Start IP counting")
         // Fastest solution but memory expensive on app start.
         val ipStore = IpAsBitsArrayStore()
         // IpAsMappedBitSetStore slower for about ~25% than IpAsBitsArrayStore
         // but can use memory more effective if IP list includes only few sub-networks
         // val ipStore = IpAsMappedBitSetStore()
-        val counter = IpCounter(FileTextReader(file.absolutePath), ipStore, logger)
+        val counter = IpCounter(FileTextReader(filePath), ipStore, logger)
         counter.start()
         logger.info("Unique IP count: ${counter.count}")
     }
