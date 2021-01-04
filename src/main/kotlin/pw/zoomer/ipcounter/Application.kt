@@ -2,7 +2,7 @@ package pw.zoomer.ipcounter
 
 import pw.zoomer.ipcounter.data.IpAsBitsArrayStore
 import pw.zoomer.ipcounter.io.FileTextReader
-import pw.zoomer.ipcounter.jobs.SingleThreadedIpCounter
+import pw.zoomer.ipcounter.jobs.IpCounter
 import pw.zoomer.ipcounter.log.ConsoleLogger
 import pw.zoomer.ipcounter.log.Logger
 import pw.zoomer.ipcounter.performance.Stats
@@ -14,12 +14,6 @@ import java.io.File
 class Application(private val args: Array<String>) {
     private val logger: Logger = ConsoleLogger()
     private val stats = Stats(logger)
-
-    /**
-     * Count of text reader parallel jobs.
-     * Effective value is count of CPU cores. Hyper-threading cores should not be counted.
-     */
-    private val readerJobs = 1
 
     /**
      * Parse arguments and start application if arguments is correct or show help if incorrect.
@@ -39,7 +33,7 @@ class Application(private val args: Array<String>) {
     private fun countIps(file: File) {
         logger.info("Start IP counting")
         val ipStore = IpAsBitsArrayStore()
-        val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
+        val counter = IpCounter(FileTextReader(file.absolutePath), ipStore, logger)
         counter.start()
         logger.info("Unique IP count: ${counter.count}")
     }

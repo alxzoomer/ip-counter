@@ -11,7 +11,7 @@ import pw.zoomer.ipcounter.net.QuickIpV4Parser
  * @param ipStore IpStore destination IP store.
  * @param logger ILogger logger instance to write parsing errors.
  */
-class SingleThreadedIpCounter(
+class IpCounter(
     private val reader: TextReader,
     private val ipStore: IpStore,
     private val logger: Logger
