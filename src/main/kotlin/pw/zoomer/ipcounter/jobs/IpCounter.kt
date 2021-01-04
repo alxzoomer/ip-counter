@@ -5,7 +5,7 @@ import pw.zoomer.ipcounter.io.TextReader
 import pw.zoomer.ipcounter.log.Logger
 import pw.zoomer.ipcounter.net.QuickIpV4Parser
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 /**
  * Class reads IP addresses from text reader source line by line and writes parsed IP's to IP store.
