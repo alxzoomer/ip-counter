@@ -6,10 +6,9 @@ package pw.zoomer.ipcounter.data
  */
 class IpAsBitsArrayStore : IpStore {
     private val bitsStore = LongArray(0x04_00_00_00)
-    private var counter = 0L
 
     override val count: Long
-        get() = counter
+        get() = bitsStore.sumOf { it.countOneBits().toLong() }
 
     override fun add(ipAddress: Long) {
         val register = (ipAddress / 64).toInt()
@@ -17,7 +16,6 @@ class IpAsBitsArrayStore : IpStore {
         val value = bitsStore[register]
         if (value and mask == 0L) {
             bitsStore[register] = value or mask
-            counter++
         }
     }
 
