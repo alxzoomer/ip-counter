@@ -1,6 +1,6 @@
 # IP Address Counter
 
-![Java CI](https://github.com/alxzoomer/ip-counter/workflows/Java%20CI/badge.svg?branch=dev)
+![Java CI](https://github.com/alxzoomer/ip-counter/workflows/Java%20CI/badge.svg)
 
 ## Описание задачи
 
