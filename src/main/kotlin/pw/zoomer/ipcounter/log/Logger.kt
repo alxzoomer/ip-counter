@@ -1,6 +1,6 @@
 package pw.zoomer.ipcounter.log
 
-interface ILogger {
+interface Logger {
     fun error(message: String)
     fun info(message: String)
 }

@@ -2,7 +2,7 @@ package pw.zoomer.ipcounter.jobs
 
 import pw.zoomer.ipcounter.data.IpStore
 import pw.zoomer.ipcounter.io.TextReader
-import pw.zoomer.ipcounter.log.ILogger
+import pw.zoomer.ipcounter.log.Logger
 import pw.zoomer.ipcounter.net.QuickIpV4Parser
 
 /**
@@ -14,7 +14,7 @@ import pw.zoomer.ipcounter.net.QuickIpV4Parser
 class SingleThreadedIpCounter(
     private val reader: TextReader,
     private val ipStore: IpStore,
-    private val logger: ILogger
+    private val logger: Logger
 ) {
     /**
      * Get count of stored IPs.

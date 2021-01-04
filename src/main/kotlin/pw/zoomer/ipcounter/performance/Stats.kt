@@ -1,8 +1,8 @@
 package pw.zoomer.ipcounter.performance
 
-import pw.zoomer.ipcounter.log.ILogger
+import pw.zoomer.ipcounter.log.Logger
 
-class Stats(private val logger: ILogger) {
+class Stats(private val logger: Logger) {
     fun memStat() {
         val r = Runtime.getRuntime()
         val free = r.freeMemory() / 1024 / 1024

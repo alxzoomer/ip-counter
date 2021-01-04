@@ -2,12 +2,9 @@ package pw.zoomer.ipcounter
 
 import pw.zoomer.ipcounter.data.IpAsBitsArrayStore
 import pw.zoomer.ipcounter.io.FileTextReader
-import pw.zoomer.ipcounter.io.RandomAccessTextReader
-import pw.zoomer.ipcounter.io.TextReader
-import pw.zoomer.ipcounter.jobs.ParallelThreadedIPCounter
 import pw.zoomer.ipcounter.jobs.SingleThreadedIpCounter
 import pw.zoomer.ipcounter.log.ConsoleLogger
-import pw.zoomer.ipcounter.log.ILogger
+import pw.zoomer.ipcounter.log.Logger
 import pw.zoomer.ipcounter.performance.Stats
 import java.io.File
 
@@ -15,7 +12,7 @@ import java.io.File
  * Application is bootstrap class.
  */
 class Application(private val args: Array<String>) {
-    private val logger: ILogger = ConsoleLogger()
+    private val logger: Logger = ConsoleLogger()
     private val stats = Stats(logger)
 
     /**
@@ -42,33 +39,8 @@ class Application(private val args: Array<String>) {
     private fun countIps(file: File) {
         logger.info("Start IP counting")
         val ipStore = IpAsBitsArrayStore()
-//        val counter = ParallelThreadedIPCounter(
-//            { jobNumber, jobsCount -> buildTextReader(file, jobNumber, jobsCount) },
-//            ipStore,
-//            logger
-//        )
-//        counter.start(readerJobs)
         val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
         counter.start()
         logger.info("Unique IP count: ${counter.count}")
-    }
-
-    /**
-     * Creates text reader for specific file and calculate file start and end position to read.
-     */
-    private fun buildTextReader(file: File, jobNumber: Int, jobsCount: Int): TextReader {
-        val chunkSize = file.length() / jobsCount
-        val chunkStartPosition = chunkSize * jobNumber
-        val chunkEndPosition = if (jobNumber < jobsCount - 1) {
-            chunkSize * (jobNumber + 1) + RandomAccessTextReader.DEFAULT_BUFFER_SIZE
-        } else {
-            file.length()
-        }
-        return RandomAccessTextReader(
-            file.absolutePath,
-            chunkStartPosition,
-            chunkEndPosition,
-            skipIncompleteLine = true
-        )
     }
 }
