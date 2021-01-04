@@ -1,5 +1,7 @@
 # IP Address Counter
 
+![Java CI](https://github.com/alxzoomer/ip-counter/workflows/Java%20CI/badge.svg?branch=dev)
+
 ## Описание задачи
 
 Дан простой текстовый файл с IPv4 адресами. Одна строка – один адрес, примерно так:

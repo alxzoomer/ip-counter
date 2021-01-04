@@ -11,6 +11,7 @@ interface IpStore {
 
     /**
      * Add IP V4 address to storage if it does not exists in storage.
+     * @param ipAddress long number IP address representation.
      */
     fun add(ipAddress: Long)
 }

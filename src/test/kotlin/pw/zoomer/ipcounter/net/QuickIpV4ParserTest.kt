@@ -5,17 +5,16 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import kotlin.test.assertNull
 
-class IpV4ParserTest {
+class QuickIpV4ParserTest {
     @ParameterizedTest
     @CsvSource(
-        "0, 0",
         "0.0.0.0, 0",
         "127.127.127.127, 2139062143",
         "255.255.255.255, 4294967295",
         "255.128.16.1, 4286582785"
     )
     fun verifyToLong(ipAddress: String, ipAddressLong: Long) {
-        val ip = IpV4Parser.toLongOrNull(ipAddress)
+        val ip = QuickIpV4Parser.toLongOrNull(ipAddress)
         assertEquals(ipAddressLong, ip)
     }
 
@@ -30,7 +29,7 @@ class IpV4ParserTest {
         "-9223372036854775809.0.0.0"
     )
     fun verifyInvalidIpFromStringReturnsNull(ipAddress: String) {
-        val ip = IpV4Parser.toLongOrNull(ipAddress)
+        val ip = QuickIpV4Parser.toLongOrNull(ipAddress)
         assertNull(ip)
     }
 }

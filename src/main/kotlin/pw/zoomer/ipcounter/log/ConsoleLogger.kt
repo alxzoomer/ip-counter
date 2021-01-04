@@ -1,6 +1,9 @@
 package pw.zoomer.ipcounter.log
 
-class ConsoleLogger : ILogger {
+/**
+ * Write logs to standard output.
+ */
+class ConsoleLogger : Logger {
     override fun error(message: String) {
         println("ERROR: $message")
     }
