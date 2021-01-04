@@ -5,7 +5,6 @@ import pw.zoomer.ipcounter.data.IpAsMappedBitSetStore
 import pw.zoomer.ipcounter.io.FileTextReader
 import pw.zoomer.ipcounter.jobs.IpCounter
 import pw.zoomer.ipcounter.log.ConsoleLogger
-import pw.zoomer.ipcounter.log.Logger
 import pw.zoomer.ipcounter.performance.Stats
 import java.io.File
 
