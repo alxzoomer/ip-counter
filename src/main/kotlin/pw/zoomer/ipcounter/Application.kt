@@ -1,9 +1,11 @@
 package pw.zoomer.ipcounter
 
 import pw.zoomer.ipcounter.data.IpAsBitsArrayStore
+import pw.zoomer.ipcounter.io.FileTextReader
 import pw.zoomer.ipcounter.io.RandomAccessTextReader
 import pw.zoomer.ipcounter.io.TextReader
 import pw.zoomer.ipcounter.jobs.ParallelThreadedIPCounter
+import pw.zoomer.ipcounter.jobs.SingleThreadedIpCounter
 import pw.zoomer.ipcounter.log.ConsoleLogger
 import pw.zoomer.ipcounter.log.ILogger
 import pw.zoomer.ipcounter.performance.Stats
@@ -40,14 +42,14 @@ class Application(private val args: Array<String>) {
     private fun countIps(file: File) {
         logger.info("Start IP counting")
         val ipStore = IpAsBitsArrayStore()
-        val counter = ParallelThreadedIPCounter(
-            { jobNumber, jobsCount -> buildTextReader(file, jobNumber, jobsCount) },
-            ipStore,
-            logger
-        )
-        counter.start(readerJobs)
-//        val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
-//        counter.start()
+//        val counter = ParallelThreadedIPCounter(
+//            { jobNumber, jobsCount -> buildTextReader(file, jobNumber, jobsCount) },
+//            ipStore,
+//            logger
+//        )
+//        counter.start(readerJobs)
+        val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
+        counter.start()
         logger.info("Unique IP count: ${counter.count}")
     }
 
