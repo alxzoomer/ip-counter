@@ -42,14 +42,14 @@ class Application(private val args: Array<String>) {
     private fun countIps(file: File) {
         logger.info("Start IP counting")
         val ipStore = IpAsBitsArrayStore()
-//        val counter = ParallelThreadedIPCounter(
-//            { jobNumber, jobsCount -> buildTextReader(file, jobNumber, jobsCount) },
-//            ipStore,
-//            logger
-//        )
-//        counter.start(readerJobs)
-        val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
-        counter.start()
+        val counter = ParallelThreadedIPCounter(
+            { jobNumber, jobsCount -> buildTextReader(file, jobNumber, jobsCount) },
+            ipStore,
+            logger
+        )
+        counter.start(readerJobs)
+//        val counter = SingleThreadedIpCounter(FileTextReader(file.absolutePath), ipStore, logger)
+//        counter.start()
         logger.info("Unique IP count: ${counter.count}")
     }
 
