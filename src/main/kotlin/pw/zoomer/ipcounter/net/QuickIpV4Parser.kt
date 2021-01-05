@@ -7,7 +7,8 @@ sealed class QuickIpV4Parser {
     private enum class ParsingState {
         WHITESPACE_OR_DIGIT,
         DIGIT_OR_DOT,
-        DIGIT
+        DIGIT,
+        WHITESPACE
     }
 
     companion object {
@@ -23,21 +24,24 @@ sealed class QuickIpV4Parser {
             var octetNum = 1
             for (ch in str) when (ch) {
                 in '0'..'9' -> {
+                    if (state != ParsingState.WHITESPACE_OR_DIGIT && state != ParsingState.DIGIT_OR_DOT &&
+                            state != ParsingState.DIGIT) return null
                     acc = (acc * 10) + (ch - '0')
                     if (acc !in 0..255) return null
                     state = if (octetNum == 4) ParsingState.WHITESPACE_OR_DIGIT else ParsingState.DIGIT_OR_DOT
                 }
                 '.' -> {
+                    if (state != ParsingState.DIGIT_OR_DOT) return null
                     if (++octetNum > 4) return null
                     ip = (ip shl 8) + acc
                     acc = 0
                     state = ParsingState.DIGIT
                 }
                 '\t', ' ' -> {
-                    if (state == ParsingState.WHITESPACE_OR_DIGIT && octetNum == 4) {
-                        break
+                    if (state != ParsingState.WHITESPACE_OR_DIGIT && state != ParsingState.WHITESPACE) {
+                        return null
                     }
-                    return null
+                    if (octetNum == 4) state = ParsingState.WHITESPACE
                 }
                 else -> return null
             }
