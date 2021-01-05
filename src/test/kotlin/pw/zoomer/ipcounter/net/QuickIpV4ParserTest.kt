@@ -11,7 +11,8 @@ class QuickIpV4ParserTest {
         "0.0.0.0, 0",
         "127.127.127.127, 2139062143",
         "255.255.255.255, 4294967295",
-        "255.128.16.1, 4286582785"
+        "255.128.16.1, 4286582785",
+        " \t 255.128.16.1\t \t, 4286582785"
     )
     fun verifyToLong(ipAddress: String, ipAddressLong: Long) {
         val ip = QuickIpV4Parser.toLongOrNull(ipAddress)
@@ -20,6 +21,8 @@ class QuickIpV4ParserTest {
 
     @ParameterizedTest
     @CsvSource(
+        "0.0.0.0 0",
+        "0.0.0.0 .",
         "''",
         "256.0.0.0",
         "0.256.0.0",
